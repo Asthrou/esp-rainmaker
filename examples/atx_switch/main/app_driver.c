@@ -14,8 +14,10 @@
 #include <esp_rmaker_standard_params.h> 
 
 #include <app_reset.h>
-#include <ws2812_led.h>
 #include "app_priv.h"
+
+
+
 
 /* This is the button that is used for toggling the power */
 #define BUTTON_GPIO          CONFIG_EXAMPLE_BOARD_BUTTON_GPIO
@@ -25,32 +27,16 @@
 #define OUTPUT_GPIO    CONFIG_EXAMPLE_OUTPUT_GPIO
 static bool g_power_state = DEFAULT_POWER;
 
-/* These values correspoind to H,S,V = 120,100,10 */
-#define DEFAULT_RED     0
-#define DEFAULT_GREEN   25
-#define DEFAULT_BLUE    0
 
 #define WIFI_RESET_BUTTON_TIMEOUT       3
 #define FACTORY_RESET_BUTTON_TIMEOUT    10
 
-static void app_indicator_set(bool state)
-{
-    if (state) {
-        ws2812_led_set_rgb(DEFAULT_RED, DEFAULT_GREEN, DEFAULT_BLUE);
-    } else {
-        ws2812_led_clear();
-    }
-}
 
-static void app_indicator_init(void)
-{
-    ws2812_led_init();
-    app_indicator_set(g_power_state);
-}
 static void push_btn_cb(void *arg)
 {
     bool new_state = !g_power_state;
     app_driver_set_state(new_state);
+
 #ifdef CONFIG_EXAMPLE_ENABLE_TEST_NOTIFICATIONS
     /* This snippet has been added just to demonstrate how the APIs esp_rmaker_param_update_and_notify()
      * and esp_rmaker_raise_alert() can be used to trigger push notifications on the phone apps.
